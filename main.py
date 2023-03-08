@@ -1,10 +1,30 @@
-import qrcode
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import Qt
+from PyQt5 import uic
+from qrcode import QRCode
 
-link = input("Link: ")
+class Window(QMainWindow):
+    def __init__(self):
+        super(Window, self).__init__()
+        uic.loadUi("MainWin.ui", self) #load window/ui file
+        self.show()
 
-qr = qrcode.QRCode(version=1)
-qr.add_data(link)
-qr.make()
+        self.generateButton.clicked.connect(self.generate)
 
-img = qr.make_image()
-img.save("testQR.png")
+    def generate(self):
+        self.url = self.link.text()
+        qr = QRCode(version=3)
+        qr.add_data(self.url)
+        qr.make()
+        qr.make_image().save(f"saved/{self.filename.text()}.png")
+
+def main():
+    app = QApplication([])
+
+    window = Window()
+    window.setWindowTitle("QR Code Generator")
+
+    app.exec_()
+
+if __name__ == "__main__":
+    main()
