@@ -3,6 +3,7 @@ from PyQt5.QtCore import Qt
 from PyQt5 import uic
 from qrcode import QRCode
 from PIL import Image
+import os
 
 class Window(QMainWindow):
     def __init__(self):
@@ -13,6 +14,9 @@ class Window(QMainWindow):
         self.generateButton.clicked.connect(self.generate)
 
     def generate(self):
+        if not os.path.isdir("saved"):
+            os.makedirs("saved")
+
         self.url = self.link.text()
         qr = QRCode(version=3)
         qr.add_data(self.url)
@@ -21,6 +25,8 @@ class Window(QMainWindow):
 
         img = Image.open(f"saved/{self.filename.text()}.png")
         img.show()
+
+        quit()
 
 def main():
     app = QApplication([])
